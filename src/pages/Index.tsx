@@ -37,24 +37,13 @@ export default function Index() {
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
-  const getTranslateUrl = async (): Promise<string> => {
-    try {
-      const mod = await import('../../func2url.json');
-      return (mod.default as Record<string, string>)['translate'] || '';
-    } catch {
-      return '';
-    }
-  };
-
   const translate = async () => {
     if (!sourceText.trim()) return;
     setLoading(true);
     setTranslatedText('');
     setDetectedLang('');
     try {
-      const url = await getTranslateUrl();
-      if (!url) throw new Error('Сервис недоступен');
-      const resp = await fetch(url, {
+      const resp = await fetch('https://functions.poehali.dev/a4a72ef8-f713-498c-af93-d498d39b1352', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: sourceText, targetLanguage: targetLang }),
